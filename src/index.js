@@ -1,5 +1,5 @@
-import Zwarn from "./src/core/zwarn"
-import ZwarnError from "./src/core/error"
+import Zwarn from "./core/zwarn"
+import ZwarnError from "./core/error"
 
 import { Application, Router, validate } from '@cfworker/web'
 import { Telegraf } from 'telegraf'

@@ -14,11 +14,9 @@
   "author": "z-warn <https://github.com/z-warn>",
   "license": "MIT",
   "devDependencies": {
-    "prettier": "^1.18.2"
-  },
-  "dependencies": {
     "@cfworker/web": "^1.6.5",
     "chance": "^1.1.7",
+    "prettier": "^1.18.2",
     "telegraf": "^3.38.0"
   }
 }
