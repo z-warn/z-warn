@@ -27,6 +27,9 @@ router.get('/:token/send',
             const tag = params.get('tag')
             const title = params.get('title')
             const text = params.get('text')
+            const mode = params.get('mode')
+            const mute = params.get('mute')
+            const page_view = params.get('pageview')
 
             // token 找 信息id
             const info_id = await TOKEN.get(token)
@@ -38,7 +41,14 @@ router.get('/:token/send',
             let zwarn = new Zwarn(info_id)
 
             // 发送提醒消息
-            await zwarn.sendWarn(bot, tag, title, text).then(data => {
+            await zwarn.sendWarn(bot, {
+                tag: tag,
+                title: title,
+                text: text,
+                mode: mode,
+                mute: mute,
+                page_view: page_view
+            }).then(data => {
                 // 返回结果
                 successResponse(data, res)
             })
@@ -73,6 +83,9 @@ router.post('/:token/send',
             const text = body.text
             const tag = body.tag
             const title = body.title
+            const mode = body.mode
+            const mute = body.mute
+            const page_view = body.pageview
 
             // token 找 信息id
             const info_id = await TOKEN.get(token)
@@ -84,7 +97,14 @@ router.post('/:token/send',
             let zwarn = new Zwarn(info_id)
 
             // 发送提醒消息
-            await zwarn.sendWarn(bot, tag, title, text).then(data => {
+            await zwarn.sendWarn(bot, {
+                tag: tag,
+                title: title,
+                text: text,
+                mode: mode,
+                mute: mute,
+                page_view: page_view
+            }).then(data => {
                 // 返回结果
                 successResponse(data, res)
             })
@@ -152,7 +172,7 @@ router.get('/:token/addChat',
             if (info_id === null) {
                 throw new ZwarnError(400, '找不到信息')
             }
-            
+
             // 获取chat_id
             let chat_info = await bot.telegram.getChat(chat)
 
@@ -198,7 +218,7 @@ router.post('/:token/addChat',
             if (info_id === null) {
                 throw new ZwarnError(400, '找不到信息')
             }
-            
+
             // 获取chat_id
             let chat_info = await bot.telegram.getChat(chat)
 
@@ -244,7 +264,7 @@ router.get('/:token/delChat',
             if (info_id === null) {
                 throw new ZwarnError(400, '找不到信息')
             }
-            
+
             // 获取chat_id
             let chat_info = await bot.telegram.getChat(chat)
 
@@ -260,7 +280,6 @@ router.get('/:token/delChat',
         }
     }
 )
-
 
 router.post('/:token/delChat',
     validate({
@@ -291,7 +310,7 @@ router.post('/:token/delChat',
             if (info_id === null) {
                 throw new ZwarnError(400, '找不到信息')
             }
-            
+
             // 获取chat_id
             let chat_info = await bot.telegram.getChat(chat)
 
@@ -307,6 +326,7 @@ router.post('/:token/delChat',
         }
     }
 )
+
 
 function errorResponse(error, res) {
     if (error.code) {

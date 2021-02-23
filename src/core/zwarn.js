@@ -37,62 +37,82 @@ class Zwarn {
         if (now - this.update_time < 1000) {
             throw new ZwarnError(400, '更新请求太快')
         }
-        this.put_times +=1
-        if (this.put_times > 51) {
-            throw new ZwarnError(400, '您的账号当前达到put请求上限，请不要滥用命令')
-        }
         this.update_time = now
         return await MAIN_INFO.put(this.info_id, JSON.stringify(this))
     }
 
-    // 发送提醒
-    async sendWarn(bot, tag, title, text) {
+    // 发送提醒  tag, title, text, mode, mute
+    async sendWarn(bot, message) {
+        let tag = message.tag
+        let title = message.title
+        let text = message.text
+        let mode = message.mode
+        let mute = message.mute
+        let page_view = message.page_view
+
+        // 组装消息
+        let extra = {}
+        let send_text = ''
+        let length = 0
+        if (!text) {
+            throw new ZwarnError(400, 'text不能为空')
+        }
+        if (tag) {
+            tag = tag.split(",").join(" #")
+            send_text = '#' + tag + ' \n'
+            length = tag.length + 3
+        }
+        const modeList = ['HTML', 'MARKDOWN']
+
+        if (title) {
+            let index = -1
+            if (mode) {
+                index = modeList.indexOf(mode.toUpperCase())
+            }
+            switch (index) {
+                case 0:
+                    send_text = send_text + '<b>' + title + '</b>' + '\n'
+                    extra.parse_mode = modeList[index]
+                    break;
+                case 1:
+                    send_text = send_text + '*' + title + '*' + '\n'
+                    extra.parse_mode = modeList[index]
+                    break;
+                default:
+                    extra.entities = []
+                    send_text = send_text + title + '\n'
+                    extra.entities.push({
+                        "offset": length,
+                        "length": title.length,
+                        "type": "bold"
+                    })
+                    break
+            }
+        }
+
+        send_text = send_text + '\n' + text
+
+        if (mute == true) {
+            extra.disable_notification = true
+        }
+        if (page_view == false) {
+            extra.disable_web_page_preview = true
+        }
+
         // 加载信息
         await this.load()
         if (this.is_block) {
             throw new ZwarnError(403, '当前禁止发送')
         }
 
-        // 组装消息
-        let send_text = ''
-        let entities = []
-        let length = 0
-        if (!text) {
-            throw new ZwarnError(400, 'text不能为空')
-        }
-        if (tag) {
-            tag = tag.split(" ").join("")
-            send_text = '#' + tag + ' \n'
-            length = tag.length + 3
-            entities.push({
-                "offset": 0,
-                "length": tag.length + 1,
-                "type": "hashtag"
-            })
-        }
-
-        if (title) {
-            title = title.split(" ").join("")
-            send_text = send_text + title+ '\n'
-            entities.push({
-                "offset": length,
-                "length": title.length,
-                "type": "bold"
-            })
-        }
-        send_text = send_text + '\n' + text
-
         // 发送消息
         let data = {}
         data.ok = []
         data.fail = []
         for (const target_chat in this.target_chats) {
-            await bot.telegram.sendMessage(this.target_chats[target_chat].id,
-                send_text, {
-                entities: entities
-            }).then(() => {
+            await bot.telegram.sendMessage(this.target_chats[target_chat].id, send_text, extra).then(() => {
                 data.ok.push({
-                    // chat_id: this.target_chats[target_chat],
+                    chat_id: this.target_chats[target_chat],
                     username: this.target_chats[target_chat].username,
                     title: this.target_chats[target_chat].title,
                     type: this.target_chats[target_chat].type,
@@ -100,7 +120,7 @@ class Zwarn {
                 })
             }).catch((error) => {
                 data.fail.push({
-                    // chat_id: this.target_chats[target_chat],
+                    chat_id: this.target_chats[target_chat],
                     username: this.target_chats[target_chat].username,
                     title: this.target_chats[target_chat].title,
                     type: this.target_chats[target_chat].type,
