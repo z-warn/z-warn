@@ -133,10 +133,6 @@ npm run creat_kv
 
 * **BOT_TOKEN**  -- tg 机器人Token
 
-* **API_ROOT**  -- worker 请求根目录
-
-  > ⚠️ 链接最后需要带上 / 
-
 * **kv_namespaces**  -- 创建KV空间时保存的输出信息
 
 ## 发布
@@ -147,7 +143,7 @@ npm run publish
 
 ## API
 
-**说明**: GET 请求参数添加至params，POST 请求参数以Json格式添加至body
+**说明: GET 请求参数添加至params，POST 请求参数以Json格式添加至body**
 
 #### /creatToken
 
@@ -187,10 +183,39 @@ npm run publish
 * 说明：发送提醒消息
 
 * 参数
-  * tag  --提醒消息Tag （非必须）
-  * title  -- 提醒消息标题（非必须）
-  * text -- 提醒正文（必须）
+  * tag 标记（多个tag以逗号分隔， 非必需）
+  
+   * title 消息标题（非必需）
+  
+   * text 消息正文（必需）
+  
+   * mode 消息输入格式（支持Markdown，Html，默认无。 
+  
+     [TG官方示例说明]: https://core.telegram.org/bots/api#html-style
+  
+   * mute 消息正文（静音发送，true为开启，默认false）
+  
+   - pageview 消息正文（页面预览，true为开启，默认true）
 
-## LICENSE
+## 更新日志
+
+***
+
+-   _2020/02/23_  **V1.0.1**
+  - 支持多Tag
+  - 支持Markdown、Html格式消息
+  - 增加静音通知参数
+  -  增加网页预览关闭
+  -  增加跨域设置
+
+***
+
+-  _2020/02/20_  **V 1.0.0** 
+  - 初步构建发布第一版本
+  - 实现初始化账户
+  - 实现发送请求
+  - 实现添加与删除群组到目标Chat
+
+## License
 
 MIT
