@@ -5,7 +5,7 @@ account_id = ""
 workers_dev = true
 route = ""
 zone_id = ""
-vars = { BOT_TOKEN = "", API_ROOT = ""}
+vars = { BOT_TOKEN = "", CORS_PATH = ""}
 kv_namespaces = [
   { binding = "TOKEN", id = "", preview_id = "" },
   { binding = "MAIN_INFO", id = "", preview_id = "" }

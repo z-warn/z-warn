@@ -350,4 +350,10 @@ function successResponse(data, res) {
     res.status = 200
 }
 
-new Application().use(router.middleware).listen()
+new Application().use(async ({ res }, next) => {
+    // 设置跨域
+    if (CORS_PATH) {
+        res.headers.set('access-control-allow-origin', CORS_PATH);
+    }
+    await next()
+}.use(router.middleware).listen()
