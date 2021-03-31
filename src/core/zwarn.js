@@ -64,19 +64,21 @@ class Zwarn {
         }
         const modeList = ['HTML', 'MARKDOWN']
 
+        
+        let index = -1
+        if (mode) {
+            index = modeList.indexOf(mode.toUpperCase())
+        }
+        if (index >= 0) {
+            extra.parse_mode = modeList[index]
+        }
         if (title) {
-            let index = -1
-            if (mode) {
-                index = modeList.indexOf(mode.toUpperCase())
-            }
             switch (index) {
                 case 0:
                     send_text = send_text + '<b>' + title + '</b>' + '\n'
-                    extra.parse_mode = modeList[index]
                     break;
                 case 1:
                     send_text = send_text + '*' + title + '*' + '\n'
-                    extra.parse_mode = modeList[index]
                     break;
                 default:
                     extra.entities = []
@@ -92,10 +94,10 @@ class Zwarn {
 
         send_text = send_text + '\n' + text
 
-        if (mute == true) {
+        if (mute == 'true' || mute == true) {
             extra.disable_notification = true
         }
-        if (page_view == false) {
+        if (page_view == 'false' || page_view == false) {
             extra.disable_web_page_preview = true
         }
 
