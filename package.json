@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "z-warn",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "基于CF worker 和 KV 的 Telegram 提醒",
   "main": "index.js",
   "scripts": {
